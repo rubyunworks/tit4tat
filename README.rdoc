@@ -8,7 +8,7 @@ TicTacToe.
 It's an interesting expirement. For some reason my 
 players don't seem to evolve. Perhaps it's becuase
 I need years fo runtime to get positive results, or
-perhaps my design doesn;t create the proper dynamic,
+perhaps my design doesn't create the proper dynamic,
 e.g. it's too easy for bad players to get reintroduced
-into the gene pool. I am not sure.
+into the gene pool.
 
