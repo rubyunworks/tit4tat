@@ -1,0 +1,70 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'nano/kernel/require_local'
+require_local 'lib/tic-tac-toe'
+
+if $0 == __FILE__
+
+  $VERBOSE = true
+
+  popCount = 50
+  genCount = 200
+  gameCount = 15
+  pop = Population.new( popCount )  # default population
+
+  #puts "\e[2J\e[0;0H"
+  loop do
+    print "\e[2J\e[0;0H(pop=#{popCount}) [N]ew Population, [E]volve, [P]lay, [V]iew, [S]ave, [L]oad or [Q]uit? "
+    inp = gets.strip.downcase
+    case inp
+    when 'n'
+      print "Population [#{popCount}]? "
+      pc = gets.strip
+      popCount = pc.to_i unless pc.empty?
+      pop = Population.new( popCount )
+      puts "Population created."; sleep 2
+    when 'e'
+      print "Generations [#{genCount}]? "
+      gc = gets.strip
+      genCount = gc.to_i unless gc.empty?
+      print "Games per Capita [#{gameCount}]? "
+      gmc = gets.strip
+      gameCount = gmc.to_i unless gmc.empty?
+      puts "Evolving..."; sleep 2
+      pop.evolve( genCount, gameCount )
+    when 'p'
+      ov = $VERBOSE
+      $VERBOSE = false
+      npc = pop.best_of_breed
+      pc = HumanPlayer.new
+      order = [ [npc, pc], [pc, npc] ][(rand*2).to_i]
+      game = Game.new( *order )
+      game.play
+      sleep 2
+      $VERBOSE = ov
+    when 'v'
+      pop.show
+      puts "Hit [Enter] key to continue... "
+      inp = gets
+    when 'l'
+      puts "Loading file 'population.yaml'..."
+      pop = YAML::load( File.open('population.yaml') )
+      sleep 2
+    when 's'  
+      puts "Saving to local file 'population.yaml'..."
+      File.open('population.yaml', 'w+'){ |f| f.write pop.to_yaml }
+      sleep 2
+    when '/'
+      $VERBOSE = ! $VERBOSE 
+    when 'q'
+      exit 0
+    end
+  end
+
+#  pop = Population.new( 50 )
+#  pop.evolve( 5000, 20 )
+  #pop.show
+  #y pop 
+
+end
